@@ -52,8 +52,8 @@ enableXsrfProtection = false\n\
 ' > ~/.streamlit/config.toml
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=120s --retries=3 \    CMD curl -f http://localhost:8080/_stcore/health || exit 1
-
+HEALTHCHECK --interval=30s --timeout=10s --start-period=120s --retries=3 \
+    CMD curl -f http://localhost:8080/_stcore/health || exit 1
 # Comando para arrancar Streamlit
 # Streamlit se ejecuta en el puerto definido por $PORT
 CMD streamlit run app.py --server.port=$PORT --server.address=0.0.0.0
