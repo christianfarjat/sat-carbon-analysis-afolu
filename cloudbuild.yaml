@@ -1,0 +1,59 @@
+steps:
+  # Pull image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - '-c'
+      - |-
+        docker pull $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY_NAME/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA || exit 0
+    id: Pull
+    entrypoint: /bin/bash
+
+  # Build image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - build
+      - '--cache-from'
+      - >-
+        $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY_NAME/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+      - '-t'
+      - >-
+        $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY_NAME/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+      - '-t'
+      - >-
+        $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY_NAME/$REPO_NAME/$_SERVICE_NAME:$SHORT_SHA
+      - '.'
+      - '-f'
+      - Dockerfile
+    id: Build
+
+  # Push image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - push
+      - '--all-tags'
+      - $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY_NAME/$REPO_NAME/$_SERVICE_NAME
+    id: Push
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    args:
+      - run
+      - services
+      - update
+      - $_SERVICE_NAME
+      - >-
+        --image=$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY_NAME/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+      - >-
+        --update-labels=managed-by=gcp-cloud-build-deploy-cloud-run,gcb-trigger-id=$_TRIGGER_ID,gcb-trigger-region=$_DEPLOY_REGION,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID
+      - '--region=$_DEPLOY_REGION'
+      - '--timeout=600'
+      - '--quiet'
+    id: Deploy
+    entrypoint: gcloud
+
+images:
+  - '$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY_NAME/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
+
+options:
+  substitutionOption: ALLOW_LOOSE
+  logging: CLOUD_LOGGING_ONLY
