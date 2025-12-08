@@ -4,7 +4,7 @@ steps:
     args:
       - '-c'
       - |-
-        docker pull $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY_NAME/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA || exit 0
+        docker pull $_AR_HOSTNAME/$_AR_PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA || exit 0
     id: Pull
     entrypoint: /bin/bash
 
@@ -14,13 +14,13 @@ steps:
       - build
       - '--cache-from'
       - >-
-        $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY_NAME/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+        $_AR_HOSTNAME/$_AR_PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
       - '-t'
       - >-
-        $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY_NAME/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+        $_AR_HOSTNAME/$_AR_PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
       - '-t'
       - >-
-        $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY_NAME/$REPO_NAME/$_SERVICE_NAME:$SHORT_SHA
+        $_AR_HOSTNAME/$_AR_PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$SHORT_SHA
       - '.'
       - '-f'
       - Dockerfile
@@ -31,7 +31,7 @@ steps:
     args:
       - push
       - '--all-tags'
-      - $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY_NAME/$REPO_NAME/$_SERVICE_NAME
+      - $_AR_HOSTNAME/$_AR_PROJECT_ID/$REPO_NAME/$_SERVICE_NAME
     id: Push
 
   # Deploy to Cloud Run
@@ -42,7 +42,7 @@ steps:
       - update
       - $_SERVICE_NAME
       - >-
-        --image=$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY_NAME/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+        --image=$_AR_HOSTNAME/$_AR_PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
       - >-
         --update-labels=managed-by=gcp-cloud-build-deploy-cloud-run,gcb-trigger-id=$_TRIGGER_ID,gcb-trigger-region=$_DEPLOY_REGION,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID
       - '--region=$_DEPLOY_REGION'
@@ -52,7 +52,7 @@ steps:
     entrypoint: gcloud
 
 images:
-  - '$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY_NAME/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
+  - '$_AR_HOSTNAME/$_AR_PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
 
 options:
   substitutionOption: ALLOW_LOOSE
