@@ -1,0 +1,470 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║          GUÍA COMPLETA DE DESPLIEGUE - CARBON ANALYSIS PLATFORM           ║
+║              Streamlit + Google Earth Engine + Claude AI                  ║
+║                                                                           ║
+║                            15 MINUTOS A PRODUCCIÓN                        ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════════════════
+OPCIÓN A: STREAMLIT CLOUD (RECOMENDADO - MÁS FÁCIL)
+═══════════════════════════════════════════════════════════════════════════
+
+⏱️  TIEMPO TOTAL: 5-10 minutos
+💰 COSTO: Gratuito + $5-50/mes Anthropic
+✅ DIFICULTAD: ⭐ Muy fácil
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PASO 1: OBTENER CREDENCIALES
+─────────────────────────────
+
+1.1) ANTHROPIC API KEY (5 minutos)
+─────────────────────────────────
+
+    1. Ir a https://console.anthropic.com/
+    2. Click "Sign up"
+    3. Completar: Email, Contraseña
+    4. Verificar email
+    5. Login
+    6. En panel, click en tu perfil (abajo izquierda)
+    7. Click "API Keys"
+    8. Click "Create Key"
+    9. 🔑 COPIAR LA CLAVE COMPLETA (comienza con sk-ant-)
+    
+    ✓ Ejemplo: sk-ant-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+1.2) EARTH ENGINE TOKEN (5 minutos)
+───────────────────────────────────
+
+    En tu terminal/cmd:
+    
+    $ python
+    >>> import ee
+    >>> ee.Authenticate()
+    
+    Se abrirá navegador:
+    - Selecciona tu cuenta Google
+    - Click "Allow"
+    - Copia el código de autorización
+    - Vuelve a terminal
+    - Pega el código y Enter
+    
+    Ahora obtener el token:
+    
+    Linux/Mac:
+    $ cat ~/.config/earthengine/credentials
+    
+    Windows:
+    Buscar archivo:
+    C:\Users\TuUsuario\.config\earthengine\credentials
+    
+    📋 Copiar TODO el contenido (es un JSON)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PASO 2: CREAR REPOSITORIO GITHUB
+───────────────────────────────
+
+En tu computadora (terminal/cmd):
+
+    # Crear carpeta
+    mkdir carbon-analysis-app
+    cd carbon-analysis-app
+    
+    # Inicializar git
+    git init
+    git config user.name "Tu Nombre"
+    git config user.email "tu@email.com"
+    
+    # Copiar archivos aquí:
+    # - app.py
+    # - requirements.txt
+    # - README.md
+    # - .streamlit_config.toml (renombrar a config.toml)
+    
+    # Crear .gitignore
+    echo '.streamlit/secrets.toml' > .gitignore
+    echo '__pycache__/' >> .gitignore
+    
+    # Primer commit
+    git add .
+    git commit -m "Initial commit: Carbon Analysis Platform AFOLU"
+
+En GitHub:
+    
+    1. Ir a https://github.com/new
+    2. Nombre: carbon-analysis-afolu
+    3. Descripción: "Carbon Analysis Platform AFOLU"
+    4. Public (importante)
+    5. ✓ Crear
+    
+    Copiar los comandos que GitHub muestra:
+    
+    git remote add origin https://github.com/TU_USUARIO/carbon-analysis-afolu.git
+    git branch -M main
+    git push -u origin main
+
+En terminal (pegando los comandos de GitHub):
+    
+    git remote add origin https://github.com/TU_USUARIO/carbon-analysis-afolu.git
+    git branch -M main
+    git push -u origin main
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PASO 3: DESPLEGAR EN STREAMLIT CLOUD
+──────────────────────────────────
+
+En el navegador:
+    
+    1. Ir a https://share.streamlit.io
+    2. Click "Sign up"
+    3. Conectar con GitHub
+    4. Autorizar Streamlit
+    5. Click "New app"
+    6. Repository: TU_USUARIO/carbon-analysis-afolu
+    7. Branch: main
+    8. Main file path: app.py
+    9. 🚀 Click "Deploy"
+    
+    Esperar... (2-5 minutos)
+    
+    ✓ Tu app está en: https://carbon-analysis-afolu.streamlit.app
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PASO 4: CONFIGURAR SECRETOS (CREDENCIALES)
+───────────────────────────────────────────
+
+En Streamlit Cloud:
+    
+    1. Ir a https://share.streamlit.io
+    2. Buscar tu app (carbon-analysis-afolu)
+    3. Click en el menú ⋯ (arriba a la derecha)
+    4. Click "Settings"
+    5. Click "Secrets"
+    6. Pegar el contenido de .streamlit_secrets_example.toml
+    
+    Reemplazar:
+    - api_key = "sk-ant-XXXXXXXX" con tu API key real
+    - token = "..." con tu Earth Engine token real
+    
+    7. Click "Save"
+    
+    ⏳ La app se reiniciará automáticamente (2-3 minutos)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PASO 5: VERIFICAR QUE FUNCIONA
+─────────────────────────────
+
+1. Ir a https://carbon-analysis-afolu.streamlit.app
+2. Esperar a que cargue (primera vez: ~30 segundos)
+3. Verificar:
+   ✓ Título "🌍 Carbon Analysis Platform AFOLU" visible
+   ✓ Mapa interactivo cargado
+   ✓ Botón "PROCESAR ANÁLISIS" disponible
+   ✓ Tabs visibles (Análisis, Índices, IA, Reporte, Info)
+
+Si ves errores:
+    → Ver "SOLUCIONAR PROBLEMAS" abajo
+
+¡LISTO! Tu app está en producción 🚀
+
+═══════════════════════════════════════════════════════════════════════════
+OPCIÓN B: GOOGLE CLOUD RUN (MÁS PROFESIONAL)
+═══════════════════════════════════════════════════════════════════════════
+
+⏱️  TIEMPO TOTAL: 15-20 minutos
+💰 COSTO: $0-5/mes (usualmente dentro de tier gratuito)
+✅ DIFICULTAD: ⭐⭐⭐ Técnico
+
+Requisitos:
+- Cuenta Google Cloud
+- gcloud CLI instalada
+- Docker instalado
+
+PASO 1: Crear Dockerfile
+────────────────────────
+
+Crear archivo: Dockerfile (sin extensión)
+
+    FROM python:3.11-slim
+    
+    WORKDIR /app
+    
+    COPY requirements.txt .
+    RUN pip install --no-cache-dir -r requirements.txt
+    
+    COPY app.py .
+    COPY .streamlit_config.toml .streamlit/config.toml
+    
+    EXPOSE 8501
+    
+    CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+
+PASO 2: Crear .gcloudignore
+───────────────────────────
+
+    .git
+    .gitignore
+    __pycache__
+    .streamlit/secrets.toml
+    .env
+
+PASO 3: Desplegar
+────────────────
+
+En terminal:
+
+    # Autenticar
+    gcloud auth login
+    
+    # Configurar proyecto
+    gcloud config set project MI-PROYECTO-ID
+    
+    # Desplegar
+    gcloud run deploy carbon-analysis \
+      --source . \
+      --platform managed \
+      --region us-central1 \
+      --allow-unauthenticated \
+      --set-env-vars="ANTHROPIC_API_KEY=sk-ant-XXXXX,EARTHENGINE_TOKEN=..."
+    
+    # Copiar URL que aparece
+
+PASO 4: Configurar secretos
+───────────────────────────
+
+    1. Ir a Google Cloud Console
+    2. Buscar "Secret Manager"
+    3. "Create Secret"
+    4. Nombre: anthropic-api-key
+    5. Valor: sk-ant-XXXXX
+    6. Repetir para earthengine-token
+    
+    (Alternativa: Variables de entorno con --set-env-vars)
+
+═══════════════════════════════════════════════════════════════════════════
+OPCIÓN C: EJECUTAR LOCALMENTE (DESARROLLO)
+═══════════════════════════════════════════════════════════════════════════
+
+⏱️  TIEMPO: 5 minutos
+💰 COSTO: $0 (solo usa créditos gratuitos de APIs)
+✅ DIFICULTAD: ⭐ Muy fácil
+
+PASO 1: Instalar dependencias
+──────────────────────────────
+
+    python -m venv venv
+    source venv/bin/activate  # En Windows: venv\Scripts\activate
+    
+    pip install -r requirements.txt
+
+PASO 2: Configurar secretos
+───────────────────────────
+
+    mkdir -p ~/.streamlit
+    
+    Crear archivo: ~/.streamlit/secrets.toml
+    
+    [anthropic]
+    api_key = "sk-ant-XXXXX"
+    
+    [earthengine]
+    token = """
+    {
+      "type": "authorized_user",
+      "client_id": "XXXX.apps.googleusercontent.com",
+      "client_secret": "XXXXXXXXXXXXXXX",
+      "refresh_token": "XXXXXXXXXXXXXXXXX"
+    }
+    """
+
+PASO 3: Ejecutar
+────────────────
+
+    streamlit run app.py
+    
+    Abre: http://localhost:8501
+
+═══════════════════════════════════════════════════════════════════════════
+SOLUCIONAR PROBLEMAS
+═══════════════════════════════════════════════════════════════════════════
+
+ERROR 1: "Earth Engine client library not initialized"
+─────────────────────────────────────────────────────
+
+Causa: Token no configurado correctamente
+
+Soluciones:
+    1. Verificar que [earthengine] token está completo
+    2. No tener espacios extra al inicio/final
+    3. Reiniciar app: Click ⟳ (arriba derecha)
+    4. Limpiar cache: streamlit cache clear
+    5. Si está en Streamlit Cloud: Re-guardar Secrets
+
+
+ERROR 2: "ANTHROPIC_API_KEY not found"
+─────────────────────────────────────
+
+Causa: API key no configurada o mal escrita
+
+Soluciones:
+    1. Verificar: [anthropic] api_key = "sk-ant-..."
+    2. Sin espacios alrededor del =
+    3. Clave debe empezar con "sk-ant-"
+    4. Crear nueva clave si no funciona
+
+
+ERROR 3: Mapa no carga
+──────────────────────
+
+Causa: Problema con geemap/folium
+
+Soluciones:
+    1. pip install -U geemap
+    2. Limpiar cache: streamlit cache clear
+    3. Hard refresh: Ctrl+Shift+R (o Cmd+Shift+R)
+    4. Cerrar pestaña y abrir nueva
+
+
+ERROR 4: "GEE_INITIALIZE" error
+───────────────────────────────
+
+Causa: Google Earth Engine no autenticado
+
+Soluciones:
+    1. En terminal local: python → import ee → ee.Authenticate()
+    2. Copiar token completo
+    3. Pegar en secrets.toml
+    4. Reiniciar app
+
+
+ERROR 5: App muy lenta
+──────────────────────
+
+Causa: Demasiados datos siendo procesados
+
+Soluciones:
+    1. Reducir rango de fechas (máx 90 días)
+    2. Aumentar cloud_cover filter a 20%
+    3. Reducir resolución (scale=60 en lugar de 30)
+    4. Usar AOI más pequeña (< 10,000 ha)
+
+
+ERROR 6: "module not found"
+──────────────────────────
+
+Causa: Dependencias no instaladas
+
+Soluciones:
+    1. Actualizar requirements.txt:
+       pip freeze > requirements.txt
+    2. En Streamlit Cloud: Push a GitHub
+    3. App se reconstruye automáticamente
+
+
+ERROR 7: No aparecen botones/pestañas
+────────────────────────────────────
+
+Causa: JavaScript no cargado correctamente
+
+Soluciones:
+    1. Ctrl+F5 (hard refresh completo)
+    2. Limpiar cookies del sitio
+    3. Intentar en navegador diferente
+    4. Reportar en GitHub Issues
+
+═══════════════════════════════════════════════════════════════════════════
+VERIFICACIÓN PRE-DESPLIEGUE
+═══════════════════════════════════════════════════════════════════════════
+
+Antes de hacer push a GitHub, ejecutar localmente:
+
+    [ ] streamlit run app.py
+    [ ] Cargar datos sin errores
+    [ ] Ver mapa interactivo
+    [ ] Botón "PROCESAR ANÁLISIS" funciona
+    [ ] Tab "Índices" muestra valores NDVI/EVI
+    [ ] Tab "IA" genera análisis sin error
+    [ ] Tab "Reporte" permite descargar TXT
+
+═══════════════════════════════════════════════════════════════════════════
+MEJORAS POST-DESPLIEGUE
+═══════════════════════════════════════════════════════════════════════════
+
+Después de que funcione básicamente:
+
+1. AGREGAR FUNCIONALIDADES
+   [ ] Carga de KMZ/KML directa
+   [ ] Exportación de mapas GeoTIFF
+   [ ] Históricos de análisis previos
+   [ ] Comparación multi-temporal
+   [ ] Cambio de idioma
+
+2. OPTIMIZAR RENDIMIENTO
+   [ ] Caché de resultados
+   [ ] Procesamiento asincrónico
+   [ ] Reducir tamaño de imágenes
+   [ ] CDN para mapas
+
+3. AÑADIR SEGURIDAD
+   [ ] Autenticación de usuarios
+   [ ] Base de datos para proyectos
+   [ ] API key limitada por usuario
+   [ ] Rate limiting
+
+4. MONETIZAR (OPCIONAL)
+   [ ] Plan freemium
+   [ ] Análisis premium
+   [ ] Reportes certificados
+   [ ] Integración blockchain
+
+═══════════════════════════════════════════════════════════════════════════
+SOPORTE Y RECURSOS
+═══════════════════════════════════════════════════════════════════════════
+
+📚 Documentación:
+   - Streamlit: https://docs.streamlit.io/
+   - GEE: https://developers.google.com/earth-engine
+   - Anthropic: https://docs.anthropic.com/
+   - geemap: https://geemap.org/
+
+🐛 Problemas:
+   - GitHub Issues: [TU_REPO]/issues
+   - Streamlit Forum: discuss.streamlit.io
+   - GEE Forum: groups.google.com/forum/#!forum/google-earth-engine-developers
+
+💬 Comunidad:
+   - Discord: [server]
+   - Slack: [workspace]
+   - Reddit: r/geospatial
+
+═══════════════════════════════════════════════════════════════════════════
+RESUMEN RÁPIDO - CHECKLIST
+═══════════════════════════════════════════════════════════════════════════
+
+[ ] ✓ Obtener Anthropic API Key (5 min)
+[ ] ✓ Obtener Earth Engine Token (5 min)
+[ ] ✓ Crear repo GitHub (2 min)
+[ ] ✓ Desplegar en Streamlit Cloud (3 min)
+[ ] ✓ Configurar Secrets (2 min)
+[ ] ✓ Verificar funcionamiento (2 min)
+
+⏱️  TOTAL: 15-20 minutos ✓
+
+═══════════════════════════════════════════════════════════════════════════
+
+¡Tu aplicación está en PRODUCCIÓN! 🚀
+
+URL: https://carbon-analysis-afolu.streamlit.app
+(Reemplazar "carbon-analysis-afolu" con tu nombre de repo)
+
+═══════════════════════════════════════════════════════════════════════════
+Made with ❤️ for AFOLU Carbon Projects
+Last Updated: December 2025
+═══════════════════════════════════════════════════════════════════════════
