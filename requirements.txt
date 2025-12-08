@@ -1,0 +1,15 @@
+geemap==0.33.0
+streamlit==1.38.0
+ee==0.2.0
+anthropic==0.34.0
+pandas==2.2.0
+numpy==1.26.0
+Pillow==10.2.0
+requests==2.31.0
+folium==0.15.0
+leafmap==0.36.0
+python-dateutil==2.9.0
+scikit-learn==1.4.2
+geopandas==0.14.0
+shapely==2.0.2
+pyogrio==0.7.2
