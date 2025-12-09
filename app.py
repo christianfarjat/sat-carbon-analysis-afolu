@@ -20,6 +20,7 @@ from io import BytesIO
 import anthropic
 from PIL import Image
 import requests
+import pathlib
 
 # ============================================================================
 # CONFIGURACIÓN INICIAL
@@ -59,20 +60,18 @@ def init_gee():
         # No usar ee.Authenticate() en producción
         # geemap lo maneja automáticamente
 
-                # Configurar credenciales desde variable de entorno
-        import json
+        # Configurar credenciales desde variable de entorno
         token_str = os.environ.get('EARTHENGINE_TOKEN', '{}')
         if token_str and token_str != '{}':
             credentials = json.loads(token_str)
             # Escribir credenciales en la ubicación de EE
-                    import pathlib
-                        ee_cred_path = pathlib.Path.home() / '.config' / 'earthengine' / 'credentials'
+            ee_cred_path = pathlib.Path.home() / '.config' / 'earthengine' / 'credentials'
             ee_cred_path.parent.mkdir(parents=True, exist_ok=True)
             ee_cred_path.write_text(token_str)
             # Inicializar EE (lee credenciales automáticamente)
             ee.Initialize(project=credentials.get('project'))
         else:
-                    geemap.ee_initialize()
+            geemap.ee_initialize()
         return True
     except Exception as e:
         st.error(f"Error inicializando GEE: {str(e)}")
