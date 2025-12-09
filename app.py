@@ -58,7 +58,15 @@ def init_gee():
     try:
         # No usar ee.Authenticate() en producción
         # geemap lo maneja automáticamente
-        geemap.ee_initialize()
+
+                # Configurar credenciales desde variable de entorno
+        import json
+        token_str = os.environ.get('EARTHENGINE_TOKEN', '{}')
+        if token_str and token_str != '{}':
+            credentials = json.loads(token_str)
+            ee.Initialize(credentials=credentials)
+        else:
+                    geemap.ee_initialize()
         return True
     except Exception as e:
         st.error(f"Error inicializando GEE: {str(e)}")
