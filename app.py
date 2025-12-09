@@ -64,7 +64,13 @@ def init_gee():
         token_str = os.environ.get('EARTHENGINE_TOKEN', '{}')
         if token_str and token_str != '{}':
             credentials = json.loads(token_str)
-            ee.Initialize(credentials=credentials, project=credentials.get('project'))
+            # Escribir credenciales en la ubicación de EE
+                    import pathlib
+                        ee_cred_path = pathlib.Path.home() / '.config' / 'earthengine' / 'credentials'
+            ee_cred_path.parent.mkdir(parents=True, exist_ok=True)
+            ee_cred_path.write_text(token_str)
+            # Inicializar EE (lee credenciales automáticamente)
+            ee.Initialize(project=credentials.get('project'))
         else:
                     geemap.ee_initialize()
         return True
