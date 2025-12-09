@@ -44,7 +44,7 @@ RUN mkdir -p ~/.streamlit
 # Configuración de Streamlit para producción
 RUN echo '\
 [server]\n\
-address = 0.0.0.0\n\
+address = "0.0.0.0"\n\
 headless = true\n\
 enableCORS = false\n\
 enableXsrfProtection = false\n\
