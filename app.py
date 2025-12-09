@@ -64,7 +64,7 @@ def init_gee():
         token_str = os.environ.get('EARTHENGINE_TOKEN', '{}')
         if token_str and token_str != '{}':
             credentials = json.loads(token_str)
-            ee.Initialize(credentials=credentials)
+            ee.Initialize(credentials=credentials, project=credentials.get('project'))
         else:
                     geemap.ee_initialize()
         return True
