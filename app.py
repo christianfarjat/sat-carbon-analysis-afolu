@@ -60,24 +60,13 @@ def init_gee():
         # No usar ee.Authenticate() en producción
         # geemap lo maneja automáticamente
 
-        # Configurar credenciales desde variable de entorno
-        token_str = os.environ.get('EARTHENGINE_TOKEN', '{}')
-        if token_str and token_str != '{}':
-            credentials = json.loads(token_str)
-            # Escribir credenciales en la ubicación de EE
-            ee_cred_path = pathlib.Path.home() / '.config' / 'earthengine' / 'credentials'
-            ee_cred_path.parent.mkdir(parents=True, exist_ok=True)
-            ee_cred_path.write_text(token_str)
-            # Inicializar EE (lee credenciales automáticamente)
-            ee.Initialize(project=credentials.get('project'))
-        else:
-            geemap.ee_initialize()
-        return True
-    except Exception as e:
+        # Usar Workload Identity (autenticación automática en Cloud Run)
+        # La cuenta de servicio de Cloud Run tiene permisos de Earth Engine
+        ee.Initialize(project='forestproject-copilot-ia')
+        return True    except Exception as e:
         st.error(f"Error inicializando GEE: {str(e)}")
-        st.info("⚠️ Asegúrate de tener configurada la variable de entorno EARTHENGINE_TOKEN")
+        st.info("⚠️ Verifica que la cuenta de servicio tenga permisos de Earth Engine")
         return False
-
 # ============================================================================
 # FUNCIONES DE PROCESAMIENTO GEE
 # ============================================================================
