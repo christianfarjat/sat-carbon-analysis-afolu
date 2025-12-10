@@ -57,11 +57,15 @@ st.markdown("""
 def init_gee():
     """Inicializar Google Earth Engine"""
     try:
-        # No usar ee.Authenticate() en producción
-        # geemap lo maneja automáticamente
-        # Usar Workload Identity (autenticación automática en Cloud Run)
-        # La cuenta de servicio de Cloud Run tiene permisos de Earth Engine
-        ee.Initialize(project='forestproject-copilot-ia')
+        from google.auth import compute_engine
+        
+        # Obtener credenciales de la cuenta de servicio de Cloud Run
+        credentials = compute_engine.Credentials(
+            scopes=['https://www.googleapis.com/auth/earthengine']
+        )
+        
+        # Inicializar con las credenciales y el proyecto
+        ee.Initialize(credentials, project='forestproject-copilot-ia')
         return True
     except Exception as e:
         st.error(f"Error inicializando GEE: {str(e)}")
