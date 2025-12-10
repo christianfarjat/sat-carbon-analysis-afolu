@@ -63,7 +63,8 @@ def init_gee():
         # Usar Workload Identity (autenticación automática en Cloud Run)
         # La cuenta de servicio de Cloud Run tiene permisos de Earth Engine
         ee.Initialize(project='forestproject-copilot-ia')
-        return True    except Exception as e:
+        return True
+    except Exception as e:
         st.error(f"Error inicializando GEE: {str(e)}")
         st.info("⚠️ Verifica que la cuenta de servicio tenga permisos de Earth Engine")
         return False
