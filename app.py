@@ -57,7 +57,7 @@ st.markdown("""
 @st.cache_resource
 def init_gee():
     """Inicializar Google Earth Engine"""
-        try:
+    try:
         # Use default credentials from the environment (service account)
         credentials, project = google.auth.default(
             scopes=['https://www.googleapis.com/auth/earthengine']
