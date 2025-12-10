@@ -10,6 +10,7 @@ Licencia: MIT
 import streamlit as st
 import geemap.foliumap as geemap
 import ee
+import google.auth
 import os
 import json
 import base64
@@ -56,16 +57,14 @@ st.markdown("""
 @st.cache_resource
 def init_gee():
     """Inicializar Google Earth Engine"""
-    try:
-        from google.auth import compute_engine
-        
-        # Obtener credenciales de la cuenta de servicio de Cloud Run
-        credentials = compute_engine.Credentials(
+        try:
+        # Use default credentials from the environment (service account)
+        credentials, project = google.auth.default(
             scopes=['https://www.googleapis.com/auth/earthengine']
         )
         
-        # Inicializar con las credenciales y el proyecto
-        ee.Initialize(credentials, project='forestproject-copilot-ia')
+        # Initialize Earth Engine with the credentials
+        ee.Initialize(credentials=credentials, project='forestproject-copilot-ia')
         return True
     except Exception as e:
         st.error(f"Error inicializando GEE: {str(e)}")
