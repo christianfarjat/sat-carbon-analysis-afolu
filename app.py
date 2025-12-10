@@ -59,7 +59,6 @@ def init_gee():
     try:
         # No usar ee.Authenticate() en producción
         # geemap lo maneja automáticamente
-
         # Usar Workload Identity (autenticación automática en Cloud Run)
         # La cuenta de servicio de Cloud Run tiene permisos de Earth Engine
         ee.Initialize(project='forestproject-copilot-ia')
@@ -68,6 +67,7 @@ def init_gee():
         st.error(f"Error inicializando GEE: {str(e)}")
         st.info("⚠️ Verifica que la cuenta de servicio tenga permisos de Earth Engine")
         return False
+
 # ============================================================================
 # FUNCIONES DE PROCESAMIENTO GEE
 # ============================================================================
